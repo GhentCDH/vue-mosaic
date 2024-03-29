@@ -6,23 +6,11 @@
 import { provide, ref } from "vue";
 import {
   MosaicContextActionsProviderKey,
-  MosaicContextActiveLeavesKey,
-  MosaicContextInactiveLeavesKey,
   MosaicDraggingSourceItemKey,
   MosaicDraggingSourcePathKey,
-  MosaicContextAllLeavesKey,
   MosaicIsDraggingKey,
 } from "../symbols/Mosaic";
-import { MosaicContextActionsProviders, MosaicItem } from "../types/Mosaic";
-
-const allLeaves = ref([]);
-provide(MosaicContextAllLeavesKey, allLeaves);
-
-const inactiveLeaves = ref([]);
-provide(MosaicContextInactiveLeavesKey, inactiveLeaves);
-
-const activeLeaves = ref<MosaicItem[]>([]);
-provide(MosaicContextActiveLeavesKey, activeLeaves);
+import { MosaicContextActionsProviders } from "../types/Mosaic";
 
 const isDragging = ref(false);
 provide(MosaicIsDraggingKey, isDragging);

@@ -5,8 +5,9 @@
     class="mosaic-droppable mosaic-window mosaic-drop-target flex flex-col h-full relative select-none rounded-md overflow-hidden"
   >
     <div
-      class="mosaic-window-toolbar h-10 bg-gray-600 p-1 flex items-center justify-between draggable cursor-move hover:bg-gray-500"
-      :draggable="true"
+      class="mosaic-window-toolbar h-10 bg-gray-600 p-1 flex items-center justify-between"
+      :class="isDraggable ? 'draggable cursor-move hover:bg-gray-500' : ''"
+      :draggable="isDraggable"
       @dragstart="handleDragStart"
     >
       <div>
@@ -48,16 +49,8 @@
 <script setup lang="ts">
 import dropRight from "lodash/dropRight";
 import values from "lodash/values";
-import { nextTick, ref, watchEffect } from "vue";
-import {
-  MosaicContextActiveLeavesKey,
-  MosaicContextAllLeavesKey,
-  MosaicContextInactiveLeavesKey,
-  MosaicDraggingSourceItemKey,
-  MosaicDraggingSourcePathKey,
-  MosaicIsDraggingKey,
-  MosaicRootActionsKey,
-} from "../symbols/Mosaic";
+import { computed, ref, watchEffect } from "vue";
+import { MosaicDraggingSourceItemKey, MosaicDraggingSourcePathKey, MosaicIsDraggingKey, MosaicRootActionsKey } from "../symbols/Mosaic";
 import { MosaicBranch, MosaicNode } from "../types/Mosaic";
 import { BoundingBox } from "../utils/BoundingBox";
 import { MosaicDropTargetPosition } from "../utils/DragAndDrop";
@@ -89,9 +82,10 @@ const mosaicRootActions = injectStrict(MosaicRootActionsKey);
 const mosaicIsDragging = injectStrict(MosaicIsDraggingKey);
 const mosaicSourcePath = injectStrict(MosaicDraggingSourcePathKey);
 const mosaicSourceItem = injectStrict(MosaicDraggingSourceItemKey);
-const allLeaves = injectStrict(MosaicContextAllLeavesKey);
-const inactiveLeaves = injectStrict(MosaicContextInactiveLeavesKey);
-const activeLeaves = injectStrict(MosaicContextActiveLeavesKey);
+
+const isDraggable = computed(() => {
+  return !(getLeaves(mosaicRootActions.getRoot()).length === 1);
+});
 
 watchEffect(() => {
   if (!mosaicDragElementClone.value || !mosaicDragElementClonePosition.value) return;
@@ -101,6 +95,7 @@ watchEffect(() => {
 });
 
 const handleDragStart = (e: DragEvent) => {
+  if (!isDraggable.value) return;
   if (!mosaicRootActions) return;
   if (!mosaicWindowRef.value) return;
 
@@ -200,12 +195,6 @@ const handleDragEnd = (event: MouseEvent, position: MosaicDropTargetPosition) =>
 };
 
 const handleRemove = async () => {
-  mosaicRootActions.updateTree([createRemoveUpdate(mosaicRootActions.getRoot(), props.path)], false, true);
-
-  await nextTick();
-
-  const newLeaves = getLeaves(mosaicRootActions.getRoot());
-  activeLeaves.value = newLeaves;
-  inactiveLeaves.value = allLeaves.value.filter(({ key }) => !activeLeaves.value.includes(key)).map(({ key }) => key);
+  mosaicRootActions.remove(props.path, props.node);
 };
 </script>

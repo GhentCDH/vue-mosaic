@@ -40,7 +40,7 @@ export interface MosaicRootActions {
    * Remove the node at `path`
    * @param path
    */
-  remove: (path: MosaicPath) => void;
+  remove: (path: MosaicPath, node: MosaicNode) => void;
   /**
    * Hide the node at `path` but keep it in the DOM. Used in Drag and Drop
    * @param path

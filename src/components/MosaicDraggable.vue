@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isVisible" :id="`inactive-item-${id}`">
+  <div>
     <div
       ref="mosaicDragItemRef"
       class="cursor-move hover:bg-slate-500 p-1 rounded-md overflow-hidden flex items-center justify-between"
@@ -18,14 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from "vue";
-import {
-  MosaicContextActiveLeavesKey,
-  MosaicDraggingSourceItemKey,
-  MosaicDraggingSourcePathKey,
-  MosaicIsDraggingKey,
-} from "../symbols/Mosaic";
-import { MosaicItem, MosaicPath } from "../types/Mosaic";
+import { ref, watchEffect } from "vue";
+import { MosaicDraggingSourceItemKey, MosaicDraggingSourcePathKey, MosaicIsDraggingKey } from "../symbols/Mosaic";
+import { MosaicItem } from "../types/Mosaic";
 import { injectStrict } from "../utils/InjectStrict";
 
 const props = defineProps<{ title: string; id: MosaicItem }>();
@@ -42,11 +37,6 @@ const mosaicDragElementClonePosition = ref<{ x: number; y: number } | null>(null
 const mosaicIsDragging = injectStrict(MosaicIsDraggingKey);
 const mosaicSourcePath = injectStrict(MosaicDraggingSourcePathKey);
 const mosaicSourceItem = injectStrict(MosaicDraggingSourceItemKey);
-const mosaicActiveLeaves = injectStrict(MosaicContextActiveLeavesKey);
-
-const isVisible = computed(() => {
-  return mosaicActiveLeaves.value.includes(props.id);
-});
 
 watchEffect(() => {
   if (!mosaicDragElementClone.value || !mosaicDragElementClonePosition.value) return;
@@ -73,9 +63,6 @@ const handleDragStart = (e: DragEvent) => {
     y: startY - mosaicDragItemRef.value.offsetTop,
   };
   mosaicDragElementClone.value = mosaicDragItemRef.value.cloneNode(true) as HTMLDivElement;
-  mosaicDragElementClone.value.style.transition = "transform";
-  mosaicDragElementClone.value.style.transitionDuration = "500ms";
-  mosaicDragElementClone.value.style.transformOrigin = `${e.offsetX}px ${e.offsetY}px`;
   mosaicDragElementClone.value.style.borderRadius = "0.375rem";
   mosaicDragElementClone.value.style.color = "white";
   mosaicDragElementClone.value.style.opacity = "75%";
@@ -87,10 +74,6 @@ const handleDragStart = (e: DragEvent) => {
   mosaicDragElementClone.value.style.justifyContent = "space-between";
   mosaicDragElementClone.value.style.width = `${mosaicDragItemRef.value.clientWidth}px`;
   mosaicDragElementClone.value.style.height = `${mosaicDragItemRef.value.clientHeight}px`;
-
-  setTimeout(() => {
-    mosaicDragElementClone.value!.style.transform = `scale(1.25)`;
-  });
 
   document.body.appendChild(mosaicDragElementClone.value as unknown as Node);
 
