@@ -3,14 +3,14 @@
     <div class="mosaic-root absolute inset-1">
       <MosaicContent v-if="root" :node="root" :bounding-box="BoundingBox.empty()" :path="[]">
         <template #content="contentProps">
-          <MosaicWindow v-bind="contentProps" @dropped="handleDropped" :title="(contentProps.node as string)">
+          <MosaicWindow v-bind="contentProps" :title="contentProps.node.title">
             <slot name="item" v-bind="contentProps"></slot>
           </MosaicWindow>
         </template>
       </MosaicContent>
       <div v-else class="w-full h-full">
         <slot name="empty">
-          <div>
+          <div class="h-full relative drop-target" @mouseup="handleDropEmpty">
             <div>No Root</div>
 
             <div @click="handleAddPanel" class="p-2 bg-gray-500 hover:bg-gray-600 cursor-pointer">Add a new panel</div>
@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { ComponentPublicInstance, provide, ref, watch } from "vue";
-import { MosaicContextActionsProviderKey, MosaicIsDraggingKey, MosaicRootActionsKey } from "../symbols/Mosaic";
+import { MosaicContextActionsProviderKey, MosaicDraggingSourceItemKey, MosaicIsDraggingKey, MosaicRootActionsKey } from "../symbols/Mosaic";
 import { MosaicItem, MosaicNode, MosaicRootActions, MosaicUpdate } from "../types/Mosaic";
 import { BoundingBox } from "../utils/BoundingBox";
 import { injectStrict } from "../utils/InjectStrict";
@@ -47,7 +47,7 @@ const emit = defineEmits<{
   (event: "release", node: MosaicNode | null): void;
   (event: "removedItem", node: MosaicNode): void;
   (event: "update:root", node: MosaicNode | null): void;
-  (event: "addItem", key: MosaicItem, title: string): void;
+  (event: "addItem", item: MosaicItem): void;
 }>();
 
 const previewRef = ref<HTMLDivElement>();
@@ -59,16 +59,24 @@ const replaceRoot = (currentNode: MosaicNode | null, suppressOnRelease: boolean 
   }
 };
 
-const handleDropped = () => {
-  console.log("Dropped ");
+const mosaicSourceItem = injectStrict(MosaicDraggingSourceItemKey);
+const handleDropEmpty = () => {
+  if (!mosaicIsDragging.value) return;
+  if (!mosaicSourceItem.value) return;
+
+  const newRoot = addMosaicNode(props.root, mosaicSourceItem.value);
+  replaceRoot(newRoot);
+  emit("addItem", mosaicSourceItem.value);
 };
 
 const handleAddPanel = () => {
-  const newKey = crypto.randomUUID();
-  const newTitle = "Jetzt neu!";
-  const newRoot = addMosaicNode(props.root, newKey);
+  const newItem = {
+    id: crypto.randomUUID(),
+    title: "New",
+  };
+  const newRoot = addMosaicNode(props.root, newItem);
   replaceRoot(newRoot);
-  emit("addItem", newKey, newTitle);
+  emit("addItem", newItem);
 };
 
 const updateTreeFromRoot = (updates: MosaicUpdate[], suppressOnRelease: boolean = false) => {

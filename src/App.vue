@@ -2,16 +2,16 @@
   <div class="bg-gray-900 h-screen text-white flex flex-col">
     <div class="p-4 flex-1 bg-gray-800 flex gap-2">
       <MosaicContext>
-        <MosaicDropzone :items="items" @add="handleAddNew">
+        <MosaicCollection :items="items" @add="handleAddNew">
           <template #item="{ item }">
-            {{ item.name }}
+            {{ item.title }}
           </template>
-        </MosaicDropzone>
+        </MosaicCollection>
 
         <Mosaic v-model:root="root" @release="handleSaveChange">
           <template #item="props">
-            <!-- <Hello v-if="props.node === 'something-the-first'" :id="'1'" />
-            <World :label="'Jiraya'" /> -->
+            <Hello v-if="props.node.id === 'SHEESH'" :id="'1'" />
+            <World v-else-if="props.node.id === 'yes'" :label="'Jiraya'" />
             {{ props }}
           </template>
         </Mosaic>
@@ -24,28 +24,30 @@
 import { ref } from "vue";
 import Mosaic from "./components/Mosaic.vue";
 import MosaicContext from "./components/MosaicContext.vue";
-import MosaicDropzone from "./components/MosaicDropzone.vue";
+import MosaicCollection from "./components/MosaicCollection.vue";
 import { MosaicNode } from "./types/Mosaic";
+import Hello from "./components/previews/Hello.vue";
+import World from "./components/previews/World.vue";
 
 const items = ref<
   {
     id: string;
-    name: string;
+    title: string;
   }[]
 >([]);
 
 const root = ref<MosaicNode>({
   direction: "row",
-  first: crypto.randomUUID(),
+  first: { id: "SHEESH", title: "1" },
   second: {
     direction: "column",
     first: {
       direction: "row",
-      first: crypto.randomUUID(),
-      second: crypto.randomUUID(),
+      first: { id: "yes", title: "2" },
+      second: { id: crypto.randomUUID(), title: "3" },
       splitPercentage: 70,
     },
-    second: crypto.randomUUID(),
+    second: { id: crypto.randomUUID(), title: "4" },
   },
   splitPercentage: 40,
 });
@@ -58,7 +60,7 @@ const handleSaveChange = (updatedNode: MosaicNode | null) => {
 const handleAddNew = () => {
   items.value.push({
     id: crypto.randomUUID(),
-    name: "New from sidepanel",
+    title: "New from sidepanel",
   });
 };
 </script>

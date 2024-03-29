@@ -65,13 +65,6 @@ const props = defineProps<{
   path: MosaicBranch[];
 }>();
 
-const emit = defineEmits<{
-  (event: "dropped"): void;
-  (event: "mousedown", mouseEvent: MouseEvent): void;
-  (event: "mousemove", mouseEvent: MouseEvent): void;
-  (event: "mouseup", mouseEvent: MouseEvent): void;
-}>();
-
 const mosaicWindowRef = ref<HTMLDivElement>();
 
 const mosaicDragElementClone = ref<HTMLDivElement | null>(null);
@@ -136,8 +129,6 @@ const handleDragStart = (e: DragEvent) => {
   mosaicRootActions.hide(props.path);
   mosaicIsDragging!.value = true;
   mosaicSourcePath!.value = props.path;
-
-  emit("mousedown", e);
 };
 
 const handleMouseMove = (e: MouseEvent) => {
@@ -145,8 +136,6 @@ const handleMouseMove = (e: MouseEvent) => {
     x: e.clientX - (mosaicDragElementCloneOriginalOffset.value?.x || 0),
     y: e.clientY - (mosaicDragElementCloneOriginalOffset.value?.y || 0),
   };
-
-  emit("mousemove", e);
 };
 
 const handleMouseUp = (e: MouseEvent) => {
@@ -162,8 +151,6 @@ const handleMouseUp = (e: MouseEvent) => {
   document.removeEventListener("mouseup", handleMouseUp);
 
   mosaicIsDragging!.value = false;
-
-  emit("mouseup", e);
 
   if ((e.target as HTMLElement).classList?.contains("drop-target")) return;
   e.preventDefault;
@@ -190,8 +177,6 @@ const handleDragEnd = (event: MouseEvent, position: MosaicDropTargetPosition) =>
     false,
     true
   );
-  emit("dropped");
-  emit("mouseup", event);
 };
 
 const handleRemove = async () => {

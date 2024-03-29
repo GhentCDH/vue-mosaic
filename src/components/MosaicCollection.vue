@@ -7,7 +7,7 @@
       Add new
     </div>
     <div>
-      <MosaicDraggable v-for="item in items" :key="item.id" :title="item.name" :id="item.id" @delete="handleDelete(item)">
+      <MosaicDraggable v-for="item in items" :key="item.id" :item="item" @delete="handleDelete(item)">
         <slot name="item" :item="item"> </slot>
       </MosaicDraggable>
     </div>
@@ -20,7 +20,7 @@ import MosaicDraggable from "./MosaicDraggable.vue";
 const props = defineProps<{
   items: {
     id: string;
-    name: string;
+    title: string;
   }[];
 }>();
 

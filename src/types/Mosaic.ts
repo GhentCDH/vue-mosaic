@@ -1,7 +1,10 @@
 import { Component, ComponentPublicInstance } from "vue";
 import { Spec } from "immutability-helper";
 
-export type MosaicItem = string | number;
+export type MosaicItem = {
+  id: string;
+  title: string;
+};
 
 export type MosaicNode = MosaicParent | MosaicItem;
 

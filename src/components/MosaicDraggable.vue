@@ -6,7 +6,11 @@
       draggable="true"
       @dragstart="handleDragStart"
     >
-      <div>{{ title }}</div>
+      <div>
+        <slot>
+          {{ item.title }}
+        </slot>
+      </div>
       <div
         class="hover:cursor-pointer hover:bg-white hover:text-red-400 w-5 h-5 flex items-center justify-center rounded-full"
         @click.stop="handleDeleteItem"
@@ -23,7 +27,7 @@ import { MosaicDraggingSourceItemKey, MosaicDraggingSourcePathKey, MosaicIsDragg
 import { MosaicItem } from "../types/Mosaic";
 import { injectStrict } from "../utils/InjectStrict";
 
-const props = defineProps<{ title: string; id: MosaicItem }>();
+const props = defineProps<{ item: MosaicItem }>();
 const emit = defineEmits<{
   (event: "delete"): void;
 }>();
@@ -82,7 +86,7 @@ const handleDragStart = (e: DragEvent) => {
 
   mosaicIsDragging.value = true;
   mosaicSourcePath.value = [];
-  mosaicSourceItem.value = props.id;
+  mosaicSourceItem.value = props.item;
 };
 
 const handleMouseMove = (e: MouseEvent) => {
