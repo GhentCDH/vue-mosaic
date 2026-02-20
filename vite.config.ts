@@ -9,7 +9,7 @@ export default defineConfig({
   root: 'demo',
   plugins: [
     vue(),
-    dts({rollupTypes: false, tsconfigPath: './tsconfig.app.json'}),
+    dts({rollupTypes: false, tsconfigPath: resolve(__dirname, 'tsconfig.app.json')}),
   ],
   build: {
     lib: {
@@ -25,5 +25,6 @@ export default defineConfig({
       },
     },
     outDir: resolve(__dirname, "dist"),
+    emptyOutDir: true,
   },
 })
