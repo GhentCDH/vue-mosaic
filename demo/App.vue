@@ -22,12 +22,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Mosaic from "./components/Mosaic.vue";
-import MosaicContext from "./components/MosaicContext.vue";
-import MosaicCollection from "./components/MosaicCollection.vue";
-import { MosaicNode } from "./types/Mosaic";
-import Hello from "./components/previews/Hello.vue";
-import World from "./components/previews/World.vue";
+import Mosaic from "../src/components/Mosaic.vue";
+import MosaicContext from "../src/components/MosaicContext.vue";
+import MosaicCollection from "../src/components/MosaicCollection.vue";
+import { MosaicNode } from "../src";
+import Hello from "./components/Hello.vue";
+import World from "./components/World.vue";
 
 const items = ref<
   {
