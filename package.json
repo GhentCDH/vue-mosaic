@@ -1,8 +1,22 @@
 {
-  "name": "modview-clone",
-  "private": true,
-  "version": "0.0.0",
+  "name": "vue-mosaic",
+  "version": "0.1.0",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-mosaic.js",
+      "types": "./dist/vue-mosaic.d.ts"
+    },
+    "./src/components/": "./src/components/",
+    "./style.css": {
+      "import": "./dist/style.css"
+    }
+  },
+  "style": "./dist/style.css",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
