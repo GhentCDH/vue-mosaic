@@ -22,21 +22,26 @@ const draggingSourceItem = ref();
 provide(MosaicDraggingSourceItemKey, draggingSourceItem);
 
 const contextActionProviders: MosaicContextActionsProviders = {
+  // @ts-ignore
   expand(path, percentage) {
     throw new Error(`[MosaicContext] expand not implemented in Mosaic`);
   },
   getRoot() {
     throw new Error(`[MosaicContext] getRoot not implemented in Mosaic`);
   },
+  // @ts-ignore
   hide(path) {
     throw new Error(`[MosaicContext] hide not implemented in Mosaic`);
   },
+  // @ts-ignore
   remove(path) {
     throw new Error(`[MosaicContext] remove not implemented in Mosaic`);
   },
+  // @ts-ignore
   replaceWith(path, node) {
     throw new Error(`[MosaicContext] replaceWith not implemented in Mosaic`);
   },
+  // @ts-ignore
   updateTree(updates, suppressOnRelease, refreshPortals) {
     throw new Error(`[MosaicContext] updateTree not implemented in Mosaic`);
   },

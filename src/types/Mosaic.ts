@@ -1,4 +1,4 @@
-import { Component, ComponentPublicInstance } from "vue";
+import { Component } from "vue";
 import { Spec } from "immutability-helper";
 
 export type MosaicItem = {

@@ -56,7 +56,7 @@ import { BoundingBox } from "../utils/BoundingBox";
 import { MosaicDropTargetPosition } from "../utils/DragAndDrop";
 import { injectStrict } from "../utils/InjectStrict";
 import { getLeaves, isParent } from "../utils/Mosaic";
-import { createDragToUpdates, createRemoveUpdate } from "../utils/MosaicUpdates";
+import { createDragToUpdates } from "../utils/MosaicUpdates";
 
 const props = defineProps<{
   title: string;
@@ -171,6 +171,7 @@ const handleMouseUp = (e: MouseEvent) => {
   );
 };
 
+// @ts-ignore
 const handleDragEnd = (event: MouseEvent, position: MosaicDropTargetPosition) => {
   mosaicRootActions.updateTree(
     createDragToUpdates(mosaicRootActions.getRoot()!, mosaicSourcePath.value, props.path, position, mosaicSourceItem.value),

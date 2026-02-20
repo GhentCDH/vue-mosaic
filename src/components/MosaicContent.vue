@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { MosaicRootActionsKey } from "../symbols/Mosaic";
-import { MosaicBranch, MosaicNode } from "../types/Mosaic";
+import { MosaicBranch, MosaicItem, MosaicNode } from "../types/Mosaic";
 import { BoundingBox } from "../utils/BoundingBox";
 import { injectStrict } from "../utils/InjectStrict";
 import { isParent } from "../utils/Mosaic";
@@ -42,6 +42,10 @@ const props = defineProps<{
   node: MosaicNode;
   boundingBox: BoundingBox;
   path: MosaicBranch[];
+}>();
+
+defineSlots<{
+  content(props: { node: MosaicItem; boundingBox: BoundingBox; path: MosaicBranch[] }): any;
 }>();
 
 const mosaicRootActions = injectStrict(MosaicRootActionsKey);

@@ -2,7 +2,6 @@ import clone from "lodash/clone";
 import get from "lodash/get";
 import { MosaicBranch, MosaicDirection, MosaicItem, MosaicNode, MosaicParent, MosaicPath } from "../types/Mosaic";
 import dropRight from "lodash/dropRight";
-import { ComponentPublicInstance } from "vue";
 import { updateTree } from "./MosaicUpdates";
 
 function alternateDirection(node: MosaicNode, direction: MosaicDirection = "row"): MosaicNode {
