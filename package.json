@@ -37,7 +37,6 @@
     "@types/node": "^25.3.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.24",
-    "plugin-vue@^5": "link:vitejs/plugin-vue@^5",
     "postcss": "^8.5.6",
     "sass": "^1.97.3",
     "tailwindcss": "^3.4.0",
