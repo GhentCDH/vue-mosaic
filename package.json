@@ -2,20 +2,23 @@
   "name": "vue-mosaic",
   "version": "0.1.0",
   "type": "module",
+  "author": "feissN",
+  "description": "A Vue 3 component for creating a mosaic layout.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GhentCDH/vue-mosaic.git"
+  },
   "exports": {
     ".": {
       "import": "./dist/vue-mosaic.js",
-      "types": "./dist/vue-mosaic.d.ts"
+      "types": "./dist/index.d.ts"
     },
-    "./src/components/": "./src/components/",
-    "./style.css": {
-      "import": "./dist/style.css"
-    }
+    "./style.css": "./dist/style.css"
   },
-  "style": "./dist/style.css",
   "files": [
-    "dist/**/*",
-    "src/**/*"
+    "dist/**/*.js",
+    "dist/**/*.css",
+    "dist/**/*.d.ts"
   ],
   "scripts": {
     "dev": "vite",
