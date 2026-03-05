@@ -21,7 +21,7 @@
     <Teleport to="body">
       <div
         ref="previewRef"
-        class="preview fixed bg-[#4c90f0] bg-opacity-40 border-2 border-[#4c90f0] rounded-md opacity-0 hover:opacity-100 cursor-alias select-none pointer-events-none transition-all"
+        class="preview fixed bg-[#4c90f0]/40 border-2 border-[#4c90f0] rounded-md opacity-0 hover:opacity-100 cursor-alias select-none pointer-events-none transition-all"
       ></div>
     </Teleport>
   </div>
