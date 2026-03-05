@@ -107,7 +107,7 @@ const handleDragStart = (e: DragEvent) => {
   };
   mosaicDragElementClone.value = mosaicWindowRef.value.cloneNode(true) as HTMLDivElement;
   mosaicDragElementClone.value.style.transition = "transform";
-  mosaicDragElementClone.value.style.transitionDuration = "500ms";
+  mosaicDragElementClone.value.style.transitionDuration = "300ms";
   mosaicDragElementClone.value.style.transformOrigin = `${e.offsetX}px ${e.offsetY}px`;
   mosaicDragElementClone.value.style.color = "white";
   mosaicDragElementClone.value.style.opacity = "75%";
