@@ -3,8 +3,7 @@
     <div
       ref="mosaicDragItemRef"
       class="cursor-move hover:bg-slate-500 p-1 rounded-md overflow-hidden flex items-center justify-between"
-      draggable="true"
-      @dragstart="handleDragStart"
+      @mousedown="handleDragStart"
     >
       <div>
         <slot>
@@ -13,7 +12,8 @@
       </div>
       <div
         class="hover:cursor-pointer hover:bg-white hover:text-red-400 w-5 h-5 flex items-center justify-center rounded-full"
-        @click.stop="handleDeleteItem"
+        @click.stop
+        @mousedown.stop="handleDeleteItem"
       >
         <span>X</span>
       </div>
@@ -49,8 +49,7 @@ watchEffect(() => {
   mosaicDragElementClone.value.style.top = `${mosaicDragElementClonePosition.value.y}px`;
 });
 
-const handleDragStart = (e: DragEvent) => {
-  e.preventDefault();
+const handleDragStart = (e: MouseEvent) => {
   if (!mosaicDragItemRef.value) return;
 
   const startX = e.clientX;
