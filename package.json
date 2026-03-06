@@ -1,6 +1,6 @@
 {
   "name": "@ghentcdh/vue-mosaic",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "author": "feissN",
   "description": "A Vue 3 component for creating a mosaic layout.",
