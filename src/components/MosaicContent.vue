@@ -1,10 +1,6 @@
 <template>
   <template v-if="isParent(node)">
-    <MosaicContent :node="node.first" :bounding-box="boundingBoxes!.first" :path="path.concat('first')">
-      <template #content="contentProps">
-        <slot name="content" v-bind="contentProps"></slot>
-      </template>
-    </MosaicContent>
+    <MosaicContent :node="node.first" :bounding-box="boundingBoxes!.first" :path="path.concat('first')" />
 
     <MosaicSplit
       :direction="node.direction"
@@ -16,23 +12,15 @@
       @change="handleResize($event, path, true)"
     />
 
-    <MosaicContent :node="node.second" :bounding-box="boundingBoxes!.second" :path="path.concat('second')">
-      <template #content="contentProps">
-        <slot name="content" v-bind="contentProps"></slot>
-      </template>
-    </MosaicContent>
+    <MosaicContent :node="node.second" :bounding-box="boundingBoxes!.second" :path="path.concat('second')" />
   </template>
-  <div v-else class="mosaic-tile absolute m-[3px]" :style="{ ...BoundingBox.asStyles(boundingBox) }">
-    <div class="w-full h-full overflow-hidden">
-      <slot name="content" :node="node" :bounding-box="boundingBox" :path="path"></slot>
-    </div>
-  </div>
+  <!-- leaf: nothing rendered here, windows are in Mosaic.vue's flat list -->
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { MosaicRootActionsKey } from "../symbols/Mosaic";
-import { MosaicBranch, MosaicItem, MosaicNode } from "../types/Mosaic";
+import { MosaicBranch, MosaicNode } from "../types/Mosaic";
 import { BoundingBox } from "../utils/BoundingBox";
 import { injectStrict } from "../utils/InjectStrict";
 import { isParent } from "../utils/Mosaic";
@@ -42,10 +30,6 @@ const props = defineProps<{
   node: MosaicNode;
   boundingBox: BoundingBox;
   path: MosaicBranch[];
-}>();
-
-defineSlots<{
-  content(props: { node: MosaicItem; boundingBox: BoundingBox; path: MosaicBranch[] }): any;
 }>();
 
 const mosaicRootActions = injectStrict(MosaicRootActionsKey);

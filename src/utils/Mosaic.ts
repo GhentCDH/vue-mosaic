@@ -3,6 +3,7 @@ import get from "lodash/get";
 import { MosaicBranch, MosaicDirection, MosaicItem, MosaicNode, MosaicParent, MosaicPath } from "../types/Mosaic";
 import dropRight from "lodash/dropRight";
 import { updateTree } from "./MosaicUpdates";
+import { BoundingBox } from "./BoundingBox";
 
 function alternateDirection(node: MosaicNode, direction: MosaicDirection = "row"): MosaicNode {
   if (isParent(node)) {
@@ -116,6 +117,29 @@ export function getPathToCorner(tree: MosaicNode, corner: Corner): MosaicPath {
   }
 
   return currentPath;
+}
+
+export interface LeafWithBoundingBox {
+  item: MosaicItem;
+  boundingBox: BoundingBox;
+  path: MosaicPath;
+}
+
+export function getLeavesWithBoundingBoxes(
+  node: MosaicNode | null,
+  boundingBox: BoundingBox = BoundingBox.empty(),
+  path: MosaicPath = []
+): LeafWithBoundingBox[] {
+  if (node == null) return [];
+  if (!isParent(node)) {
+    return [{ item: node, boundingBox, path }];
+  }
+  const splitPercentage = node.splitPercentage ?? 50;
+  const { first: firstBB, second: secondBB } = BoundingBox.split(boundingBox, splitPercentage, node.direction);
+  return [
+    ...getLeavesWithBoundingBoxes(node.first, firstBB, [...path, 'first']),
+    ...getLeavesWithBoundingBoxes(node.second, secondBB, [...path, 'second']),
+  ];
 }
 
 /**
