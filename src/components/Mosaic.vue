@@ -1,13 +1,25 @@
 <template>
   <div class="mosaic w-full h-full relative overflow-hidden">
     <div class="mosaic-root absolute inset-1">
-      <MosaicContent v-if="root" :node="root" :bounding-box="BoundingBox.empty()" :path="[]">
-        <template #content="contentProps">
-          <MosaicWindow v-bind="contentProps" :title="contentProps.node.title">
-            <slot name="item" v-bind="contentProps"></slot>
-          </MosaicWindow>
-        </template>
-      </MosaicContent>
+      <!-- MosaicContent: only renders split handles, no slot needed -->
+      <MosaicContent v-if="root" :node="root" :bounding-box="BoundingBox.empty()" :path="[]" />
+
+      <!-- Flat keyed window list — components are never destroyed when tree restructures -->
+      <template v-if="root">
+        <div
+          v-for="leaf in leavesWithBoundingBoxes"
+          :key="leaf.item.id"
+          class="mosaic-tile absolute m-[3px]"
+          :style="{ ...BoundingBox.asStyles(leaf.boundingBox) }"
+        >
+          <div class="w-full h-full overflow-hidden">
+            <MosaicWindow :node="leaf.item" :bounding-box="leaf.boundingBox" :path="leaf.path" :title="leaf.item.title">
+              <slot name="item" :node="leaf.item" :bounding-box="leaf.boundingBox" :path="leaf.path"></slot>
+            </MosaicWindow>
+          </div>
+        </div>
+      </template>
+
       <div v-else class="w-full h-full">
         <slot name="empty">
           <div class="h-full relative drop-target" @mouseup="handleDropEmpty">
@@ -28,12 +40,12 @@
 </template>
 
 <script setup lang="ts">
-import { ComponentPublicInstance, provide, ref, watch } from "vue";
+import { ComponentPublicInstance, computed, provide, ref, watch } from "vue";
 import { MosaicContextActionsProviderKey, MosaicDraggingSourceItemKey, MosaicIsDraggingKey, MosaicRootActionsKey } from "../symbols/Mosaic";
 import { MosaicItem, MosaicNode, MosaicRootActions, MosaicUpdate } from "../types/Mosaic";
 import { BoundingBox } from "../utils/BoundingBox";
 import { injectStrict } from "../utils/InjectStrict";
-import { addMosaicNode } from "../utils/Mosaic";
+import { addMosaicNode, getLeavesWithBoundingBoxes } from "../utils/Mosaic";
 import { createExpandUpdate, createHideUpdate, createRemoveUpdate, updateTree } from "../utils/MosaicUpdates";
 import MosaicContent from "./MosaicContent.vue";
 import MosaicWindow from "./MosaicWindow.vue";
@@ -51,6 +63,11 @@ const emit = defineEmits<{
 }>();
 
 const previewRef = ref<HTMLDivElement>();
+
+const leavesWithBoundingBoxes = computed(() => {
+  if (!props.root) return [];
+  return getLeavesWithBoundingBoxes(props.root);
+});
 
 const replaceRoot = (currentNode: MosaicNode | null, suppressOnRelease: boolean = false) => {
   emit("update:root", currentNode);
